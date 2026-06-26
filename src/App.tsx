@@ -691,7 +691,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
     setJournalEntries((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const hasTyped = inputValue.trim().length > 0 || history.length > 0;
+  const hasTyped = history.some((m) => m.role === "user");
 
   return (
     <div
@@ -700,8 +700,10 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
         isDark ? "bg-[#0D0D0F] text-zinc-200" : "bg-[#FFFFFF] text-stone-950"
       }`}
     >
-      {/* Theme Switcher (Pill style aligned in the top middle) - Always visible */}
-      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40 select-none">
+      {/* Theme Switcher (Pill style aligned in the top middle) - Always visible, fades smoothly depending on interaction */}
+      <div className={`absolute top-6 left-1/2 transform -translate-x-1/2 z-40 select-none transition-all duration-500 ${
+        hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}>
         <button
           onClick={() => setIsDark(!isDark)}
           id="theme-switcher-btn"
@@ -723,13 +725,13 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
       </div>
 
       {/* Top Navigation Bar - Brand & Sidebar Trigger (Hidden till first key typed) */}
-      <header className={`absolute top-0 inset-x-0 h-20 flex items-center justify-between px-10 z-30 select-none transition-all duration-500 ${
+      <header className={`absolute top-0 inset-x-0 h-20 flex items-center justify-between px-4 sm:px-10 z-30 select-none transition-all duration-500 ${
         hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}>
         {/* Left Side: Brand Indicator */}
         <div className="flex items-center gap-2">
           <Fingerprint className="w-5 h-5 text-indigo-500" />
-          <span className="text-xs font-semibold tracking-[0.1em] text-black dark:text-zinc-200 uppercase">
+          <span className="text-xs font-semibold tracking-[0.1em] text-black dark:text-zinc-200 uppercase truncate max-w-[150px] sm:max-w-none">
             ARUPI VIRTUAL SELF
           </span>
         </div>
@@ -753,7 +755,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
       </header>
 
       {/* Main Interactive Screen */}
-      <main className="flex-1 flex flex-col items-center justify-center relative w-full max-w-4xl mx-auto px-10 pt-28 pb-32">
+      <main className="flex-1 flex flex-col items-center justify-center relative w-full max-w-4xl mx-auto px-4 sm:px-10 pt-20 sm:pt-28 pb-24 sm:pb-32">
         
         {/* Dialogue Stream Container */}
         <div
@@ -973,7 +975,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
           
           {/* Main typing form wrapped elegantly */}
           <form onSubmit={handleSendMessage} className="w-full max-w-2xl flex flex-col items-center relative pointer-events-auto">
-            <div className="w-full relative flex items-center justify-center min-h-[48px] px-12">
+            <div className="w-full relative flex items-center justify-center min-h-[48px] px-6 sm:px-12">
               {/* Fake typing background indicator when field is empty to show the blinking cursor */}
               {!inputValue && !isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-center">
@@ -1000,7 +1002,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
                   type="button"
                   onClick={toggleListening}
                   title={isListening ? "Listening... click to stop" : "Speak your thoughts"}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 p-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  className={`absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 p-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                     isListening
                       ? "bg-red-500/10 text-red-500 animate-pulse scale-110"
                       : "text-stone-400 dark:text-zinc-500 hover:text-indigo-500 hover:bg-stone-100 dark:hover:bg-zinc-900"
@@ -1024,7 +1026,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
             )}
 
             {/* Quick action helper buttons below cursor */}
-            {(hasTyped || isListening) && (
+            {(inputValue.trim().length > 0 || isListening) && (
               <button
                 type="submit"
                 disabled={isLoading}
@@ -1046,15 +1048,15 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
       </main>
 
       {/* Bottom Status Bar - Clean, letter-spaced, text-uppercase status from Artistic Flair */}
-      <footer className={`absolute bottom-10 inset-x-0 flex flex-col md:flex-row items-center justify-between px-10 z-30 select-none text-[11px] font-mono tracking-[0.15em] text-stone-600 dark:text-zinc-400 uppercase gap-4 md:gap-0 transition-all duration-500 ${
+      <footer className={`absolute bottom-4 sm:bottom-10 inset-x-0 flex flex-col md:flex-row items-center justify-between px-4 sm:px-10 z-30 select-none text-[10px] sm:text-[11px] font-mono tracking-[0.12em] sm:tracking-[0.15em] text-stone-600 dark:text-zinc-400 uppercase gap-3 md:gap-0 transition-all duration-500 ${
         hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center">
+          <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-[#22C55E] rounded-full" />
             <span>LOCAL ENCRYPTION ACTIVE</span>
           </div>
-          <span className="opacity-30">|</span>
+          <span className="opacity-30 hidden sm:inline">|</span>
           <span className="font-light flex items-center">
             {syncData ? (
               <span>USER: @{syncData.username}</span>
@@ -1087,7 +1089,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
                     setIsEditingName(false);
                   }}
                   placeholder="name..."
-                  className="bg-transparent border-b border-indigo-500 outline-none text-[11px] font-mono tracking-[0.15em] text-indigo-500 max-w-[120px] p-0"
+                  className="bg-transparent border-b border-indigo-500 outline-none text-[10px] sm:text-[11px] font-mono tracking-[0.15em] text-indigo-500 max-w-[120px] p-0"
                 />
               </form>
             ) : (
@@ -1105,48 +1107,48 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-4 w-full md:w-auto">
           <button
             onClick={() => setFocusMode(!focusMode)}
-            className={`transition-colors py-1.5 px-3 rounded-lg flex items-center gap-1.5 ${
+            className={`transition-colors py-1.5 px-2.5 sm:px-3 rounded-lg flex items-center gap-1 sm:gap-1.5 ${
               focusMode
                 ? "bg-indigo-500/10 text-indigo-500"
                 : "hover:bg-stone-100 dark:hover:bg-zinc-900"
             }`}
           >
             <Lock className="w-3.5 h-3.5" />
-            <span>{focusMode ? "Focus Mode" : "Stream Active"}</span>
+            <span>{focusMode ? <span>Focus<span className="hidden sm:inline"> Mode</span></span> : <span>Stream<span className="hidden sm:inline"> Active</span></span>}</span>
           </button>
           
           <button
             onClick={() => setIsJournalOpen(true)}
-            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1.5"
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-2.5 sm:px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1 sm:gap-1.5"
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Reflection Journal</span>
+            <span><span className="hidden sm:inline">Reflection </span>Journal</span>
           </button>
 
           <button
             onClick={() => setIsCatalogOpen(true)}
-            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1.5"
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-2.5 sm:px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1 sm:gap-1.5"
           >
             <Globe className="w-3.5 h-3.5" />
-            <span>Virtual Catalog</span>
+            <span><span className="hidden sm:inline">Virtual </span>Catalog</span>
           </button>
 
           <button
             onClick={handleDownloadInstructions}
-            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1.5"
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors py-1.5 px-2.5 sm:px-3 rounded-lg border border-stone-200 dark:border-zinc-800 flex items-center gap-1 sm:gap-1.5"
             title="Download Consolidated Platform Guidelines"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Guidelines</span>
+            <span className="hidden sm:inline">Guidelines</span>
           </button>
 
           {history.length > 0 && (
             <button
               onClick={() => setShowEraseConfirm(true)}
-              className="hover:text-red-500 hover:bg-red-500/10 py-1.5 px-3 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+              className="hover:text-red-500 hover:bg-red-500/10 py-1.5 px-2.5 sm:px-3 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>ERASE</span>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MessageSquare, RefreshCw, X, Send, Eye, Sparkles } from "lucide-react";
+import { MessageSquare, RefreshCw, X, Send, Eye, Sparkles, ChevronLeft } from "lucide-react";
 import { PublicClone, Message } from "../types";
 import TypingText from "./TypingText";
 
@@ -118,7 +118,7 @@ export default function CloneExploration({ isDark, onClose }: CloneExplorationPr
       >
         {/* Left list pane */}
         <div
-          className={`w-full md:w-2/5 p-5 flex flex-col border-r ${
+          className={`w-full md:w-2/5 p-5 flex flex-col border-r ${selectedClone ? "hidden md:flex" : "flex"} ${
             isDark ? "border-zinc-800 bg-[#0c0c0d]" : "border-stone-200 bg-[#FAF9F6]"
           }`}
         >
@@ -211,7 +211,7 @@ export default function CloneExploration({ isDark, onClose }: CloneExplorationPr
         </div>
 
         {/* Right dialogue pane */}
-        <div className="flex-1 flex flex-col h-full relative">
+        <div className={`flex-1 flex flex-col h-full relative ${selectedClone ? "flex" : "hidden md:flex"}`}>
           <button
             onClick={onClose}
             className={`hidden md:block absolute top-4 right-4 p-1.5 rounded-full z-10 transition-colors ${
@@ -230,6 +230,13 @@ export default function CloneExploration({ isDark, onClose }: CloneExplorationPr
                 }`}
               >
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setSelectedClone(null)}
+                    className="md:hidden p-1.5 -ml-1 rounded-lg hover:bg-stone-100 dark:hover:bg-zinc-850 text-stone-500 dark:text-zinc-400"
+                    title="Back to Catalog"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
                   <span className="text-2xl">{selectedClone.avatarSeed}</span>
                   <div>
                     <h3 className="font-semibold text-sm leading-tight">{selectedClone.name}</h3>
@@ -238,6 +245,13 @@ export default function CloneExploration({ isDark, onClose }: CloneExplorationPr
                     </p>
                   </div>
                 </div>
+                {/* Mobile X to close dialog */}
+                <button
+                  onClick={onClose}
+                  className="md:hidden p-1.5 rounded-lg hover:bg-red-500/10 text-stone-400 animate-fadeIn"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
               {/* Bio & Details Header Drawer */}
