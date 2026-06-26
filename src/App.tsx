@@ -759,8 +759,8 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
         )}
       </AnimatePresence>
 
-      {/* Theme Switcher (Pill style aligned in the top middle) - Always visible, fades smoothly depending on interaction */}
-      <div className={`absolute top-6 left-1/2 transform -translate-x-1/2 z-40 select-none transition-all duration-500 ${
+      {/* Theme Switcher (Pill style aligned in the top middle) - Only visible on desktop/tablet, fades smoothly depending on interaction */}
+      <div className={`hidden md:block absolute top-6 left-1/2 transform -translate-x-1/2 z-40 select-none transition-all duration-500 ${
         hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}>
         <button
@@ -798,8 +798,29 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
         {/* Space filler where the theme switcher used to be in header */}
         <div />
 
-        {/* Top Right: Sidebar Menu Trigger (Three bar minimalist look from Artistic Flair) */}
+        {/* Top Right: Sidebar Menu Trigger & Mobile Theme Switcher */}
         <div className="flex items-center gap-3">
+          {/* Mobile Theme Switcher */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsDark(!isDark)}
+              title="Toggle theme mode"
+              className={`w-12 h-6.5 rounded-full p-0.5 transition-all duration-300 relative flex items-center ${
+                isDark ? "bg-zinc-800 border border-zinc-700" : "bg-stone-100 border border-stone-300"
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full shadow-md flex items-center justify-center transition-all duration-300 ${
+                  isDark 
+                    ? "translate-x-5 bg-indigo-500 text-white" 
+                    : "translate-x-0 bg-white text-stone-900"
+                }`}
+              >
+                {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+              </div>
+            </button>
+          </div>
+
           <button
             onClick={() => setIsSidebarOpen(true)}
             id="sidebar-selector-btn"
