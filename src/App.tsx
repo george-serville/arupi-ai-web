@@ -755,7 +755,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
       </header>
 
       {/* Main Interactive Screen */}
-      <main className="flex-1 flex flex-col items-center justify-center relative w-full max-w-4xl mx-auto px-4 sm:px-10 pt-20 sm:pt-28 pb-24 sm:pb-32">
+      <main className="flex-1 flex flex-col items-center justify-center relative w-full max-w-4xl mx-auto px-4 sm:px-10 pt-20 sm:pt-28 pb-6 md:pb-32">
         
         {/* Dialogue Stream Container */}
         <div
@@ -1048,9 +1048,9 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
       </main>
 
       {/* Bottom Status Bar - Clean, letter-spaced, text-uppercase status from Artistic Flair */}
-      <footer className={`absolute bottom-4 sm:bottom-10 inset-x-0 flex flex-col md:flex-row items-center justify-between px-4 sm:px-10 z-30 select-none text-[10px] sm:text-[11px] font-mono tracking-[0.12em] sm:tracking-[0.15em] text-stone-600 dark:text-zinc-400 uppercase gap-3 md:gap-0 transition-all duration-500 ${
-        hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}>
+      <footer className={`${
+        hasTyped ? "flex opacity-100" : "hidden pointer-events-none opacity-0"
+      } w-full flex-col md:flex-row items-center justify-between px-4 sm:px-10 z-30 select-none text-[10px] sm:text-[11px] font-mono tracking-[0.12em] sm:tracking-[0.15em] text-stone-600 dark:text-zinc-400 uppercase gap-4 md:gap-0 transition-all duration-500 relative md:absolute md:bottom-10 md:inset-x-0 mt-auto md:mt-0 py-6 md:py-0 border-t border-stone-100 dark:border-zinc-850 md:border-t-0`}>
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center">
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-[#22C55E] rounded-full" />
@@ -1107,7 +1107,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-4 w-full md:w-auto">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-4 w-full md:w-auto mt-2 md:mt-0">
           <button
             onClick={() => setFocusMode(!focusMode)}
             className={`transition-colors py-1.5 px-2.5 sm:px-3 rounded-lg flex items-center gap-1 sm:gap-1.5 ${
