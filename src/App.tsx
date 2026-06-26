@@ -33,6 +33,16 @@ import AdminPanelModal from "./components/AdminPanelModal";
 import TypingText from "./components/TypingText";
 
 export default function App() {
+  // Page initial loader state
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Theme state
   const [isDark, setIsDark] = useState<boolean>(() => {
     const saved = localStorage.getItem("theme");
@@ -700,6 +710,55 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
         isDark ? "bg-[#0D0D0F] text-zinc-200" : "bg-[#FFFFFF] text-stone-950"
       }`}
     >
+      {/* Premium Ambient Page Loader */}
+      <AnimatePresence>
+        {isPageLoading && (
+          <motion.div
+            key="page-loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className={`fixed inset-0 z-50 flex flex-col items-center justify-center ${
+              isDark ? "bg-[#0D0D0F]" : "bg-[#FFFFFF]"
+            }`}
+          >
+            <div className="flex flex-col items-center space-y-6">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.5 }}
+                animate={{ 
+                  scale: [0.95, 1.05, 0.95],
+                  opacity: [0.6, 1, 0.6],
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity,
+                  ease: "easeInOut" 
+                }}
+                className="relative flex items-center justify-center w-24 h-24"
+              >
+                {/* Outer rotating ring */}
+                <div className="absolute inset-0 rounded-full border-t-2 border-indigo-500/80 animate-spin" style={{ animationDuration: '1.5s' }} />
+                {/* Inner slower reverse-rotating ring */}
+                <div className="absolute inset-2 rounded-full border-b-2 border-indigo-400/40 animate-spin" style={{ animationDuration: '3s', animationDirection: 'reverse' }} />
+                
+                <Fingerprint className="w-12 h-12 text-indigo-500" />
+              </motion.div>
+
+              <div className="text-center space-y-2 select-none">
+                <h1 className={`text-sm font-bold tracking-[0.2em] uppercase ${
+                  isDark ? "text-zinc-200" : "text-stone-900"
+                }`}>
+                  ARUPI VIRTUAL SELF
+                </h1>
+                <p className="text-[10px] font-mono tracking-widest uppercase text-indigo-500/80 animate-pulse">
+                  SECURE VAULT INITIALIZING...
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Theme Switcher (Pill style aligned in the top middle) - Always visible, fades smoothly depending on interaction */}
       <div className={`absolute top-6 left-1/2 transform -translate-x-1/2 z-40 select-none transition-all duration-500 ${
         hasTyped ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -997,7 +1056,7 @@ A dedicated \`seo-config.json\` governs key landing routes on the server to opti
                 style={{ height: "auto" }}
               />
 
-              {speechSupported && (
+              {speechSupported && hasTyped && (
                 <button
                   type="button"
                   onClick={toggleListening}
